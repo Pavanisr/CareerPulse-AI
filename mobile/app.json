@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "name": "CareerPulse AI",
+    "slug": "careerpulse-ai",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "ios": { "supportsTablet": false, "bundleIdentifier": "com.careerpulse.ai" },
+    "android": { "package": "com.careerpulse.ai" },
+    "plugins": ["expo-sqlite"]
+  }
+}
