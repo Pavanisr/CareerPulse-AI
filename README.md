@@ -2,52 +2,6 @@
 
 AI mock interview coach + offline spaced-repetition certification prep. React Native (Expo), TypeScript, SQLite, Node.js, Google Gemini.
 
-## Architecture
-
-```
-careerpulse-ai/
-├── docs/schema.sql                  # source of truth for the local SQLite DDL
-├── scripts/sync-schema.sh           # regenerates mobile/src/shared/db/schema.ts from schema.sql
-├── backend/                         # Node + Express; the ONLY place the Gemini key lives
-│   └── src/
-│       ├── server.ts                # helmet, CORS, rate limit, error mapping
-│       ├── gemini.ts                # JSON-mode call, Zod validation, one self-repair retry
-│       ├── prompts.ts               # system prompts + injection-fenced prompt builders
-│       ├── schemas.ts               # request + model-output Zod schemas
-│       └── routes/interview.ts      # /start, /turn, /summary (server computes the final score)
-└── mobile/                          # Expo app
-    ├── App.tsx / index.ts
-    └── src/
-        ├── app/bootstrap.ts         # open + migrate DB, seed starter decks
-        ├── config.ts  theme/
-        ├── navigation/              # tabs (Dashboard, Decks) + stack (setup, session, review)
-        ├── shared/
-        │   ├── db/                  # database.ts (singleton + migrations), schema.ts (generated)
-        │   └── components/          # Button, Card, ProgressBar, ScoreRing, Screen
-        └── modules/
-            ├── flashcards/          # 100% offline
-            │   ├── sm2.ts (+ sm2.test.ts)   # pure SM-2 engine
-            │   ├── streak.ts                # pure streak maths
-            │   ├── repository.ts            # all SQLite reads/writes for decks/cards/reviews
-            │   ├── seedData.ts
-            │   ├── DecksScreen.tsx
-            │   └── FlashcardReviewScreen.tsx   # flip animation + Again/Hard/Good/Easy
-            ├── interview/
-            │   ├── api.ts  types.ts
-            │   ├── history.ts               # interview_history table
-            │   ├── weaknessSync.ts          # interview -> "Interview Gaps" flashcard deck
-            │   ├── InterviewSetupScreen.tsx
-            │   └── InterviewSessionScreen.tsx  # Q&A, instant feedback modal, final study plan
-            └── dashboard/
-                ├── readiness.ts             # 60% interview avg + 40% flashcard mastery
-                ├── dashboardService.ts
-                └── DashboardScreen.tsx
-```
-
-Design rules: the flashcard module has no network code, the interview module is the only one that talks to the API, and the two meet in exactly one place (`weaknessSync.ts`).
-
-## Run it
-
 ### 1. Backend
 ```bash
 cd backend
